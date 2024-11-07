@@ -1,0 +1,10 @@
+*
+!*/
+
+target/
+
+!Cargo.*
+!*.rs
+
+!.gitignore
+!README.md

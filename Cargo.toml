@@ -1,0 +1,14 @@
+[package]
+name = "whale"
+version = "0.1.0"
+edition = "2021"
+keywords = ["reactive", "incremental", "dependency-tracking"]
+categories = ["data-structures"]
+license = "MIT OR Apache-2.0"
+homepage = "https://github.com/ryo33/whale"
+repository = "https://github.com/ryo33/whale"
+readme = "README.md"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+arc-swap = "1.7"
