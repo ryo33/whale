@@ -22,7 +22,7 @@ A high-level query framework for incremental computation in Rust.
 
 ## Quick Start
 
-```rust
+```rust,ignore
 use query_flow::{query, QueryContext, QueryError, QueryRuntime};
 
 #[query]
@@ -41,7 +41,7 @@ assert_eq!(*result, 3);
 
 The `#[query]` macro transforms a function into a query struct implementing the `Query` trait:
 
-```rust
+```rust,ignore
 use query_flow::{query, QueryContext, QueryError};
 
 // Basic query - generates `Add` struct
@@ -60,7 +60,7 @@ fn double_sum(ctx: &mut QueryContext, a: i32, b: i32) -> Result<i32, QueryError>
 
 ### Macro Options
 
-```rust
+```rust,ignore
 // Custom durability (0-3, higher = changes less frequently)
 #[query(durability = 2)]
 fn stable_query(ctx: &mut QueryContext, id: u64) -> Result<Data, QueryError> { ... }
@@ -84,7 +84,7 @@ fn complex_query(ctx: &mut QueryContext) -> Result<ComplexType, QueryError> { ..
 
 For full control, implement the `Query` trait directly:
 
-```rust
+```rust,ignore
 use query_flow::{Query, QueryContext, QueryError, Key};
 
 struct Add { a: i32, b: i32 }
@@ -114,7 +114,7 @@ query-flow distinguishes between **system errors** and **user errors**:
 - **System errors** (`QueryError`): Suspend, Cycle, Cancelled, MissingDependency
 - **User errors**: Wrapped in the query output type
 
-```rust
+```rust,ignore
 // Fallible query - user errors in Output
 #[query]
 fn parse_int(ctx: &mut QueryContext, input: String) -> Result<Result<i32, ParseIntError>, QueryError> {
@@ -135,7 +135,7 @@ Assets represent external resources (files, network data) that queries can depen
 
 ### Defining Asset Keys
 
-```rust
+```rust,ignore
 use query_flow::{asset_key, AssetKey, DurabilityLevel};
 use std::path::PathBuf;
 
@@ -165,7 +165,7 @@ impl AssetKey for TextureId {
 
 ### Using Assets in Queries
 
-```rust
+```rust,ignore
 #[query]
 fn process_config(ctx: &mut QueryContext, path: PathBuf) -> Result<Config, QueryError> {
     // Get asset - returns LoadingState<Arc<String>>
@@ -181,7 +181,7 @@ fn process_config(ctx: &mut QueryContext, path: PathBuf) -> Result<Config, Query
 
 ### Asset Loading Flow
 
-```rust
+```rust,ignore
 let runtime = QueryRuntime::new();
 
 // Optional: Register a locator for immediate resolution
@@ -207,7 +207,7 @@ match runtime.query(ProcessConfig::new(path)) {
 
 ### Asset Invalidation
 
-```rust
+```rust,ignore
 // File was modified externally
 runtime.invalidate_asset(&ConfigFile(path));
 // Dependent queries will now suspend until resolved
@@ -220,7 +220,7 @@ runtime.remove_asset(&ConfigFile(path));
 
 The suspense pattern allows sync query code to handle async operations:
 
-```rust
+```rust,ignore
 /// LoadingState<T> represents async loading state
 pub enum LoadingState<T> {
     Loading,
@@ -251,7 +251,7 @@ Durability hints help optimize invalidation propagation:
 
 ## QueryRuntime API
 
-```rust
+```rust,ignore
 let runtime = QueryRuntime::new();
 
 // Execute queries
